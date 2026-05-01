@@ -8,14 +8,16 @@ import {
   Github,
   Instagram,
   Linkedin,
-  MessageCircle,
   Play,
   Sparkles,
   Star,
   Twitter,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ChallengerAvatar } from "@/components/ChallengerAvatar";
+import { TestimonialChallengersSection } from "@/components/TestimonialChallengersSection";
 
+// Mêmes fichiers que l’ancien Vite (src/assets/*.png) — servis depuis public/landing
 const lostImg = "/landing/lost.png";
 const boxImg = "/landing/box.png";
 const laptopGirl = "/landing/laptop-girl.png";
@@ -24,6 +26,8 @@ const thinker = "/landing/thinker.png";
 type LeaderboardMember = {
   id: string;
   name: string;
+  avatarUrl?: string | null;
+  avatarInitials?: string | null;
   lptKikos: number;
   lptLevel: number;
 };
@@ -91,19 +95,6 @@ const fallbackRanking: [string, string, number][] = [
   ["Ali D.", "Cybersécurité", 2390],
 ];
 
-const avatars = [
-  "🧑‍💻",
-  "👩‍💻",
-  "🧑🏽‍💻",
-  "👨🏿‍💻",
-  "👩🏻‍💻",
-  "🧑🏻‍💻",
-  "👨🏽‍💻",
-  "👩🏿‍💻",
-  "🧑‍🚀",
-  "👩‍🚀",
-];
-
 const podiumColors = [
   "bg-[hsl(var(--yellow))]",
   "bg-[hsl(var(--pink))] text-white",
@@ -144,9 +135,15 @@ export default function HomePage() {
         role: `Niveau ${m.lptLevel}`,
         pts: m.lptKikos,
         color: podiumColors[i] ?? "bg-[hsl(var(--yellow))]",
+        avatarUrl: m.avatarUrl,
+        avatarInitials: m.avatarInitials,
       }));
     }
-    return defaultPodium;
+    return defaultPodium.map((p) => ({
+      ...p,
+      avatarUrl: null as string | null,
+      avatarInitials: null as string | null,
+    }));
   }, [leaderboard]);
 
   const rankingRows = useMemo(() => {
@@ -156,6 +153,8 @@ export default function HomePage() {
         name: m.name,
         role: `Niveau ${m.lptLevel}`,
         pts: m.lptKikos,
+        avatarUrl: m.avatarUrl,
+        avatarInitials: m.avatarInitials,
       }));
     }
     return fallbackRanking.map(([name, role, pts], i) => ({
@@ -163,6 +162,8 @@ export default function HomePage() {
       name,
       role,
       pts,
+      avatarUrl: null as string | null,
+      avatarInitials: null as string | null,
     }));
   }, [leaderboard]);
 
@@ -208,26 +209,31 @@ export default function HomePage() {
     }
   };
 
-  const spotlightCards = [
-    {
-      tag: "Pro du mois",
-      color: "bg-[hsl(var(--yellow))]",
-      name: spotlight?.proOfMonth?.name ?? "—",
-      role: spotlight?.proOfMonth ? `Niveau ${spotlight.proOfMonth.lptLevel}` : "En attente des données",
-      pts: spotlight?.proOfMonthKikos ?? 0,
-      label: spotlight?.monthLabel ?? "",
-      avatar: "👩🏾‍💻",
-    },
-    {
-      tag: "Premier de la classe",
-      color: "bg-[hsl(var(--blue))] text-white",
-      name: spotlight?.proOfWeek?.name ?? "—",
-      role: spotlight?.proOfWeek ? `Niveau ${spotlight.proOfWeek.lptLevel}` : "En attente des données",
-      pts: spotlight?.proOfWeekKikos ?? 0,
-      label: spotlight?.weekLabel ?? "",
-      avatar: "🧑🏽‍💻",
-    },
-  ];
+  const spotlightCards = useMemo(
+    () => [
+      {
+        tag: "Pro du mois",
+        color: "bg-[hsl(var(--yellow))]",
+        name: spotlight?.proOfMonth?.name ?? "—",
+        role: spotlight?.proOfMonth ? `Niveau ${spotlight.proOfMonth.lptLevel}` : "En attente des données",
+        pts: spotlight?.proOfMonthKikos ?? 0,
+        label: spotlight?.monthLabel ?? "",
+        avatarUrl: spotlight?.proOfMonth?.avatarUrl ?? null,
+        avatarInitials: spotlight?.proOfMonth?.avatarInitials ?? null,
+      },
+      {
+        tag: "Premier de la classe",
+        color: "bg-[hsl(var(--blue))] text-white",
+        name: spotlight?.proOfWeek?.name ?? "—",
+        role: spotlight?.proOfWeek ? `Niveau ${spotlight.proOfWeek.lptLevel}` : "En attente des données",
+        pts: spotlight?.proOfWeekKikos ?? 0,
+        label: spotlight?.weekLabel ?? "",
+        avatarUrl: spotlight?.proOfWeek?.avatarUrl ?? null,
+        avatarInitials: spotlight?.proOfWeek?.avatarInitials ?? null,
+      },
+    ],
+    [spotlight],
+  );
 
   return (
     <main className="min-h-screen overflow-x-hidden">
@@ -282,15 +288,23 @@ export default function HomePage() {
               <img
                 src={laptopGirl}
                 alt=""
-                className="hidden md:inline-block w-40 h-auto"
+                className="inline-block w-28 sm:w-36 md:w-40 h-auto max-w-[40vw] object-contain"
                 width={160}
                 height={107}
+                decoding="async"
               />
             </span>
             <br />
             <span className="inline-flex items-center gap-4 flex-wrap justify-center mt-2">
               Passion
-              <img src={thinker} alt="" className="hidden md:inline-block w-32 h-auto" width={128} height={85} />
+              <img
+                src={thinker}
+                alt=""
+                className="inline-block w-24 sm:w-28 md:w-32 h-auto max-w-[35vw] object-contain"
+                width={128}
+                height={85}
+                decoding="async"
+              />
               <span className="px-4 py-1 rounded-full bg-[hsl(var(--blue))] text-white border-2 border-foreground">
                 La Tech
               </span>
@@ -302,14 +316,19 @@ export default function HomePage() {
               <div className="text-xs font-bold text-[hsl(var(--pink))] mb-1">LES PROS DE LA TECH</div>
               <div className="flex items-center gap-2 text-sm">
                 <div className="flex -space-x-2">
-                  {avatars.slice(0, 3).map((a, i) => (
-                    <span
-                      key={i}
-                      className="w-7 h-7 rounded-full bg-[hsl(var(--yellow))] border-2 border-foreground grid place-items-center text-xs"
-                    >
-                      {a}
-                    </span>
-                  ))}
+                  {[0, 1, 2].map((idx) => {
+                    const m = leaderboard[idx];
+                    return (
+                      <ChallengerAvatar
+                        key={m?.id ?? `hero-${idx}`}
+                        name={m?.name ?? "LPT"}
+                        avatarUrl={m?.avatarUrl}
+                        avatarInitials={m?.avatarInitials}
+                        className="size-7 ring-2 ring-background"
+                        initialsClassName="text-[10px] font-bold"
+                      />
+                    );
+                  })}
                 </div>
                 <span>Découvre des contenus de qualité</span>
               </div>
@@ -338,7 +357,15 @@ export default function HomePage() {
             Vous êtes <span className="text-[hsl(var(--blue))]">perdus</span> ? <span className="inline-block">😵‍💫</span>
           </h2>
           <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
-            <img src={lostImg} alt="Personne perdue dans la tech" className="w-full max-w-sm mx-auto" loading="lazy" width={400} height={400} />
+            <img
+              src={lostImg}
+              alt="Personne perdue dans la tech"
+              className="w-full max-w-sm mx-auto object-contain"
+              loading="lazy"
+              width={400}
+              height={400}
+              decoding="async"
+            />
             <div>
               <h3 className="text-3xl md:text-4xl mb-4">
                 Vous ne savez pas par où <span className="text-[hsl(var(--pink))]">commencer</span> ?
@@ -358,10 +385,11 @@ export default function HomePage() {
             <img
               src={boxImg}
               alt="Sortir du cadre"
-              className="w-full max-w-sm mx-auto md:order-4 scale-x-[-1]"
+              className="w-full max-w-sm mx-auto md:order-4 scale-x-[-1] object-contain"
               loading="lazy"
               width={400}
               height={400}
+              decoding="async"
             />
           </div>
         </div>
@@ -404,61 +432,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-background">
-        <div className="container mx-auto py-24">
-          <h2 className="text-center text-3xl md:text-5xl mb-16">
-            C&apos;est sûr que tu seras ébloui par <br />
-            ces <span className="text-[hsl(var(--pink))] underline-wavy">témoignages</span>.
-          </h2>
-          <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto items-center">
-            <div className="card-pop p-8">
-              <MessageCircle className="w-8 h-8 text-[hsl(var(--pink))] mb-4" />
-              <p className="text-lg leading-relaxed">
-                {
-                  "Suite à une période un peu compliquée pour moi, j'ai découvert Les Pros de la Tech. J'ai pu rejoindre une communauté bienveillante, apprendre régulièrement, et surtout j'ai pris confiance en mes compétences. Aujourd'hui, je suis épanoui et j'aide à mon tour les nouveaux membres."
-                }
-              </p>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[hsl(var(--yellow))] border-2 border-foreground grid place-items-center">🧑‍💻</div>
-                <div>
-                  <div className="font-bold">Mehdi K.</div>
-                  <div className="text-xs text-muted-foreground">Développeur Fullstack</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative h-80">
-              {avatars.map((a, i) => {
-                const positions = [
-                  "top-0 left-1/3",
-                  "top-4 right-4",
-                  "top-20 left-4",
-                  "top-24 right-1/4",
-                  "top-32 left-1/2",
-                  "top-44 right-8",
-                  "top-48 left-12",
-                  "top-56 right-1/3",
-                  "bottom-4 left-1/3",
-                  "bottom-0 right-12",
-                ];
-                const colors = ["bg-[hsl(var(--yellow))]", "bg-[hsl(var(--pink))]", "bg-[hsl(var(--blue))]", "bg-background"];
-                return (
-                  <div
-                    key={i}
-                    className={`absolute ${positions[i]} w-16 h-16 rounded-full border-2 border-foreground grid place-items-center text-2xl ${colors[i % 4]} float-slow`}
-                    style={{ animationDelay: `${i * 0.3}s` }}
-                  >
-                    {a}
-                  </div>
-                );
-              })}
-              <div className="absolute bottom-12 right-0 w-16 h-16 rounded-full border-2 border-foreground bg-foreground text-background grid place-items-center font-extrabold">
-                +95
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <TestimonialChallengersSection />
 
       <section className="bg-grid">
         <div className="container mx-auto py-24">
@@ -470,7 +444,15 @@ export default function HomePage() {
             {spotlightCards.map((p, i) => (
               <div key={i} className="card-pop p-6 text-center">
                 <span className={`pill ${p.color} mb-4`}>{p.tag}</span>
-                <div className="w-20 h-20 mx-auto rounded-full border-2 border-foreground bg-muted grid place-items-center text-3xl my-4">{p.avatar}</div>
+                <div className="mx-auto my-4 flex justify-center">
+                  <ChallengerAvatar
+                    name={p.name}
+                    avatarUrl={p.avatarUrl}
+                    avatarInitials={p.avatarInitials}
+                    className="size-20"
+                    initialsClassName="text-2xl font-extrabold"
+                  />
+                </div>
                 <div className="font-extrabold text-lg">{p.name}</div>
                 <div className="text-sm text-muted-foreground">{p.role}</div>
                 {p.label ? <div className="text-xs text-muted-foreground mt-1">{p.label}</div> : null}
@@ -496,8 +478,14 @@ export default function HomePage() {
                 <div className={`pill mb-3 ${l.color}`}>
                   #{l.rank} {l.rank === 1 && "👑"}
                 </div>
-                <div className="w-14 h-14 mx-auto rounded-full border-2 border-foreground bg-[hsl(var(--yellow))] grid place-items-center text-2xl">
-                  {avatars[l.rank - 1]}
+                <div className="mx-auto flex justify-center">
+                  <ChallengerAvatar
+                    name={l.name}
+                    avatarUrl={l.avatarUrl}
+                    avatarInitials={l.avatarInitials}
+                    className="size-14"
+                    initialsClassName="text-sm font-bold"
+                  />
                 </div>
                 <div className="font-extrabold mt-3">{l.name}</div>
                 <div className="text-xs text-muted-foreground">{l.role}</div>
@@ -510,9 +498,12 @@ export default function HomePage() {
             {rankingRows.map((row, i) => (
               <div key={`${row.rank}-${row.name}`} className="flex items-center gap-4 p-4 hover:bg-muted/50">
                 <div className="w-8 text-center font-extrabold text-muted-foreground">#{row.rank}</div>
-                <div className="w-10 h-10 rounded-full border-2 border-foreground bg-[hsl(var(--yellow))] grid place-items-center">
-                  {avatars[(i + 3) % avatars.length]}
-                </div>
+                <ChallengerAvatar
+                  name={row.name}
+                  avatarUrl={row.avatarUrl}
+                  avatarInitials={row.avatarInitials}
+                  className="size-10"
+                />
                 <div className="flex-1">
                   <div className="font-bold">{row.name}</div>
                   <div className="text-xs text-muted-foreground">{row.role}</div>

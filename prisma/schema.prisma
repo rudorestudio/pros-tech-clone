@@ -7,12 +7,14 @@ datasource db {
 }
 
 model Member {
-  id          String         @id
-  name        String
-  lptKikos    Int            @default(0) @map("lpt_kikos")
-  lptLevel    Int            @default(1) @map("lpt_level")
-  lptArchived Boolean        @default(false) @map("lpt_archived")
-  challenges  UserChallenge[]
+  id               String          @id
+  name             String
+  avatarUrl        String?         @map("avatar_url")
+  avatarInitials   String?         @map("avatar_initials")
+  lptKikos         Int             @default(0) @map("lpt_kikos")
+  lptLevel         Int             @default(1) @map("lpt_level")
+  lptArchived      Boolean         @default(false) @map("lpt_archived")
+  challenges       UserChallenge[]
 
   @@map("members")
 }
