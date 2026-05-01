@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 .env
+.env.*
+!.env.example
+
+# Next.js build output (never commit)
+.next/
+out/
 
 # Editor directories and files
 .vscode/*
