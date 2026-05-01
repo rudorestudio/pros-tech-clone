@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Member {
+  id          String         @id
+  name        String
+  lptKikos    Int            @default(0) @map("lpt_kikos")
+  lptLevel    Int            @default(1) @map("lpt_level")
+  lptArchived Boolean        @default(false) @map("lpt_archived")
+  challenges  UserChallenge[]
+
+  @@map("members")
+}
+
+model UserChallenge {
+  id            String    @id @default(cuid())
+  userId        String    @map("user_id")
+  challengeId   String    @map("challenge_id")
+  status        String
+  pointsAwarded Int?      @map("points_awarded")
+  validatedAt   DateTime? @map("validated_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user Member @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, challengeId])
+  @@map("lpt_user_challenges")
+}
+
+model PartnerRegistration {
+  id          String   @id @default(cuid())
+  companyName String   @map("company_name")
+  contactName String   @map("contact_name")
+  email       String
+  phone       String?
+  website     String?  @db.Text
+  message     String   @db.Text
+  status      String   @default("new")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@index([status])
+  @@map("partner_registrations")
+}
