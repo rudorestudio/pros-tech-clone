@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { ChallengerAvatar } from "@/components/ChallengerAvatar";
+import { LptNavbarLogo } from "@/components/LptNavbarLogo";
 import { TestimonialChallengersSection } from "@/components/TestimonialChallengersSection";
 
 // Mêmes fichiers que l’ancien Vite (src/assets/*.png) — servis depuis public/landing
@@ -239,13 +240,12 @@ export default function HomePage() {
     <main className="min-h-screen overflow-x-hidden">
       <header className="sticky top-0 z-50 backdrop-blur bg-background/70 border-b-2 border-foreground/10">
         <nav className="container mx-auto flex items-center justify-between py-4">
-          <a href="#" className="flex items-center gap-2 font-extrabold text-lg">
-            <span className="grid place-items-center w-9 h-9 rounded-xl bg-[hsl(var(--yellow))] border-2 border-foreground">
-              ✦
-            </span>
-            <span>
-              Les Pros <span className="text-[hsl(var(--pink))]">de la</span> Tech
-            </span>
+          <a
+            href="#accueil"
+            className="flex items-center shrink-0"
+            aria-label="Les Pros de la Tech — Accueil"
+          >
+            <LptNavbarLogo />
           </a>
           <ul className="hidden md:flex items-center gap-8 font-medium">
             <li>
