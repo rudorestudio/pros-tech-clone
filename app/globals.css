@@ -81,7 +81,7 @@
   .underline-wavy {
     text-decoration: underline;
     text-decoration-style: wavy;
-    text-decoration-color: hsl(var(--pink));
+    text-decoration-color: hsl(var(--blue));
     text-underline-offset: 6px;
   }
 }

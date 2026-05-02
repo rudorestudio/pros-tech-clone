@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type ComponentType, type FormEvent, type SVGProps } from "react";
 import {
   ArrowDown,
   ArrowRight,
   Award,
-  Github,
-  Instagram,
+  Facebook,
   Linkedin,
   Play,
   Sparkles,
   Star,
-  Twitter,
+  X,
+  Youtube,
 } from "lucide-react";
 import { toast } from "sonner";
 import { ChallengerAvatar } from "@/components/ChallengerAvatar";
@@ -45,12 +45,57 @@ type SpotlightData = {
 type PartnerFormValues = {
   companyName: string;
   contactName: string;
-  country: string;
   email: string;
   phone: string;
-  website: string;
   message: string;
 };
+
+const HERO_YOUTUBE_EMBED =
+  "https://www.youtube.com/embed/-X8XoG0rFNw?autoplay=1&rel=0&modestbranding=1";
+
+function WhatsAppBrandIcon({ className }: SVGProps<SVGSVGElement>) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+    </svg>
+  );
+}
+
+function TelegramBrandIcon({ className }: SVGProps<SVGSVGElement>) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+    </svg>
+  );
+}
+
+const SOCIAL_LINKS: { href: string; label: string; Icon: ComponentType<{ className?: string }> }[] = [
+  {
+    href: "https://www.facebook.com/p/Les-Pros-de-la-Tech-61561913896151/",
+    label: "Facebook — Les Pros de la Tech",
+    Icon: Facebook,
+  },
+  {
+    href: "https://www.linkedin.com/company/les-pros-de-la-tech/",
+    label: "LinkedIn — Les Pros de la Tech",
+    Icon: Linkedin,
+  },
+  {
+    href: "https://www.youtube.com/@LesProsdelaTech",
+    label: "YouTube — Les Pros de la Tech",
+    Icon: Youtube,
+  },
+  {
+    href: "https://www.whatsapp.com/channel/0029Va923zU9xVJnqNyIJG14",
+    label: "WhatsApp — chaîne Les Pros de la Tech",
+    Icon: WhatsAppBrandIcon,
+  },
+  {
+    href: "https://t.me/group_devenir_pro",
+    label: "Telegram — Les Pros de la Tech",
+    Icon: TelegramBrandIcon,
+  },
+];
 
 const stats = [
   { v: "40+", l: "entreprises" },
@@ -72,7 +117,7 @@ const defaultPodium = [
     name: "Yanis M.",
     role: "DevOps",
     pts: 4890,
-    color: "bg-[hsl(var(--pink))] text-white",
+    color: "bg-sky-700 text-white",
   },
   {
     rank: 3,
@@ -98,7 +143,7 @@ const fallbackRanking: [string, string, number][] = [
 
 const podiumColors = [
   "bg-[hsl(var(--yellow))]",
-  "bg-[hsl(var(--pink))] text-white",
+  "bg-sky-700 text-white",
   "bg-[hsl(var(--blue))] text-white",
 ];
 
@@ -108,13 +153,21 @@ export default function HomePage() {
   const [form, setForm] = useState<PartnerFormValues>({
     companyName: "",
     contactName: "",
-    country: "",
     email: "",
     phone: "",
-    website: "",
     message: "",
   });
   const [submitting, setSubmitting] = useState(false);
+  const [videoOpen, setVideoOpen] = useState(false);
+
+  useEffect(() => {
+    if (!videoOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setVideoOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [videoOpen]);
 
   useEffect(() => {
     fetch("/api/leaderboard")
@@ -171,10 +224,6 @@ export default function HomePage() {
   const submitPartner = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
-    const messageWithCountry =
-      form.country.trim().length > 0
-        ? `${form.message}\n\nPays : ${form.country.trim()}`
-        : form.message;
     try {
       const res = await fetch("/api/partenaires", {
         method: "POST",
@@ -184,8 +233,8 @@ export default function HomePage() {
           contactName: form.contactName,
           email: form.email,
           phone: form.phone,
-          website: form.website,
-          message: messageWithCountry,
+          website: "",
+          message: form.message,
         }),
       });
       if (!res.ok) {
@@ -197,10 +246,8 @@ export default function HomePage() {
       setForm({
         companyName: "",
         contactName: "",
-        country: "",
         email: "",
         phone: "",
-        website: "",
         message: "",
       });
     } catch {
@@ -223,7 +270,7 @@ export default function HomePage() {
         avatarInitials: spotlight?.proOfMonth?.avatarInitials ?? null,
       },
       {
-        tag: "Premier de la classe",
+        tag: "Pro de la Semaine",
         color: "bg-[hsl(var(--blue))] text-white",
         name: spotlight?.proOfWeek?.name ?? "—",
         role: spotlight?.proOfWeek ? `Niveau ${spotlight.proOfWeek.lptLevel}` : "En attente des données",
@@ -249,17 +296,17 @@ export default function HomePage() {
           </a>
           <ul className="hidden md:flex items-center gap-8 font-medium">
             <li>
-              <a href="#accueil" className="hover:text-[hsl(var(--pink))]">
+              <a href="#accueil" className="hover:text-[hsl(var(--blue))]">
                 Accueil
               </a>
             </li>
             <li>
-              <a href="#chiffres" className="hover:text-[hsl(var(--pink))]">
+              <a href="#chiffres" className="hover:text-[hsl(var(--blue))]">
                 Chiffres
               </a>
             </li>
             <li>
-              <a href="#classement" className="hover:text-[hsl(var(--pink))]">
+              <a href="#classement" className="hover:text-[hsl(var(--blue))]">
                 Classement
               </a>
             </li>
@@ -274,7 +321,7 @@ export default function HomePage() {
         <div className="container mx-auto pt-16 pb-24 text-center">
           <div className="flex justify-center gap-3 flex-wrap mb-10">
             <span className="pill">
-              <Sparkles className="w-4 h-4 text-[hsl(var(--pink))]" /> Plus de 1k membres déjà actifs
+              <Sparkles className="w-4 h-4 text-[hsl(var(--blue))]" /> Plus de 1k membres déjà actifs
             </span>
             <span className="pill bg-[hsl(var(--yellow))]">200+ Passionnés</span>
           </div>
@@ -282,7 +329,7 @@ export default function HomePage() {
           <h1 className="text-5xl md:text-7xl lg:text-8xl leading-[0.95]">
             <span className="inline-flex items-center gap-4 flex-wrap justify-center">
               La
-              <span className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[hsl(var(--pink))] text-white border-2 border-foreground">
+              <span className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[hsl(var(--blue))] text-white border-2 border-foreground">
                 <Star className="w-8 h-8 fill-current" /> Tech
               </span>
               <img
@@ -313,7 +360,7 @@ export default function HomePage() {
 
           <div className="mt-12 flex justify-center flex-wrap gap-6 items-center">
             <div className="card-pop p-4 w-64 text-left">
-              <div className="text-xs font-bold text-[hsl(var(--pink))] mb-1">LES PROS DE LA TECH</div>
+              <div className="text-xs font-bold text-[hsl(var(--blue))] mb-1">LES PROS DE LA TECH</div>
               <div className="flex items-center gap-2 text-sm">
                 <div className="flex -space-x-2">
                   {[0, 1, 2].map((idx) => {
@@ -342,14 +389,50 @@ export default function HomePage() {
 
             <button
               type="button"
-              aria-label="Lecture vidéo"
+              aria-label="Voir la vidéo de présentation Les Pros de la Tech sur YouTube"
+              aria-haspopup="dialog"
               className="w-14 h-14 rounded-full border-2 border-foreground bg-background grid place-items-center hover:bg-[hsl(var(--blue))] hover:text-white transition"
+              onClick={() => setVideoOpen(true)}
             >
               <Play className="w-5 h-5" />
             </button>
           </div>
         </div>
       </section>
+
+      {videoOpen ? (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 bg-black/35 backdrop-blur-[3px]"
+          role="presentation"
+          onClick={() => setVideoOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-4xl rounded-2xl border-2 border-foreground bg-black shadow-[8px_8px_0_hsl(var(--ink))] overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Vidéo YouTube Les Pros de la Tech"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="absolute top-2 right-2 z-10 w-10 h-10 rounded-full border-2 border-white/80 bg-black/70 text-white grid place-items-center hover:bg-black transition"
+              onClick={() => setVideoOpen(false)}
+              aria-label="Fermer la vidéo"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="aspect-video w-full">
+              <iframe
+                title="Les Pros de la Tech — présentation"
+                src={HERO_YOUTUBE_EMBED}
+                className="h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <section className="bg-background border-y-2 border-foreground">
         <div className="container mx-auto py-24">
@@ -368,7 +451,7 @@ export default function HomePage() {
             />
             <div>
               <h3 className="text-3xl md:text-4xl mb-4">
-                Vous ne savez pas par où <span className="text-[hsl(var(--pink))]">commencer</span> ?
+                Vous ne savez pas par où <span className="text-[hsl(var(--blue))]">commencer</span> ?
               </h3>
               <p className="text-muted-foreground text-lg leading-relaxed">
                 Rejoignez une communauté de passionnés qui partagent leurs connaissances et vous guident dans votre parcours tech.
@@ -376,7 +459,7 @@ export default function HomePage() {
             </div>
             <div className="md:order-3">
               <h3 className="text-3xl md:text-4xl mb-4">
-                Passionnés tech mais <span className="text-[hsl(var(--pink))]">confus</span> ?
+                Passionnés tech mais <span className="text-[hsl(var(--blue))]">confus</span> ?
               </h3>
               <p className="text-muted-foreground text-lg leading-relaxed">
                 Découvrez des ressources, des événements et un réseau de professionnels pour éclaircir vos doutes et accélérer votre croissance.
@@ -403,7 +486,7 @@ export default function HomePage() {
 
           <p className="text-muted-foreground">Vous doutez toujours ?</p>
           <h3 className="text-2xl md:text-4xl mb-10">
-            Pourquoi ne pas voir nos <span className="text-[hsl(var(--pink))]">chiffres</span> ?
+            Pourquoi ne pas voir nos <span className="text-[hsl(var(--blue))]">chiffres</span> ?
           </h3>
 
           <div className="card-pop bg-background grid grid-cols-2 md:grid-cols-4 max-w-4xl mx-auto">
@@ -437,7 +520,7 @@ export default function HomePage() {
       <section className="bg-grid">
         <div className="container mx-auto py-24">
           <h2 className="text-center text-3xl md:text-5xl mb-2">
-            Les <span className="text-[hsl(var(--pink))]">Pros</span> en Lumière
+            Les <span className="text-[hsl(var(--blue))]">Pros</span> en Lumière
           </h2>
           <p className="text-center text-muted-foreground mb-12">Rejoignez ces étoiles montantes de la communauté LPT</p>
           <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
@@ -456,7 +539,7 @@ export default function HomePage() {
                 <div className="font-extrabold text-lg">{p.name}</div>
                 <div className="text-sm text-muted-foreground">{p.role}</div>
                 {p.label ? <div className="text-xs text-muted-foreground mt-1">{p.label}</div> : null}
-                <div className="mt-4 inline-flex items-center gap-1 text-[hsl(var(--pink))] font-bold">
+                <div className="mt-4 inline-flex items-center gap-1 text-[hsl(var(--blue))] font-bold">
                   <Star className="w-4 h-4 fill-current" /> {p.pts} pts
                 </div>
               </div>
@@ -489,7 +572,7 @@ export default function HomePage() {
                 </div>
                 <div className="font-extrabold mt-3">{l.name}</div>
                 <div className="text-xs text-muted-foreground">{l.role}</div>
-                <div className="mt-2 font-bold text-[hsl(var(--pink))]">{l.pts} pts</div>
+                <div className="mt-2 font-bold text-[hsl(var(--blue))]">{l.pts} pts</div>
               </div>
             ))}
           </div>
@@ -531,40 +614,31 @@ export default function HomePage() {
         <div className="container mx-auto py-24 max-w-2xl">
           <div className="card-pop p-8 md:p-12 bg-background">
             <h2 className="text-center text-3xl md:text-4xl mb-2">
-              Devenir <span className="text-[hsl(var(--pink))]">Partenaire</span>
+              Devenir <span className="text-[hsl(var(--blue))]">Partenaire</span>
             </h2>
             <p className="text-center text-muted-foreground mb-8">
               Rejoignez les entreprises qui font confiance à la communauté LPT.
             </p>
 
             <form className="grid sm:grid-cols-2 gap-4" onSubmit={submitPartner}>
-              <label className="block sm:col-span-1">
-                <span className="text-sm font-semibold">Nom de l&apos;entreprise *</span>
+              <label className="block sm:col-span-2">
+                <span className="text-sm font-semibold">Nom de votre organisation *</span>
                 <input
                   className="mt-1 w-full rounded-xl border-2 border-foreground/20 px-4 py-2.5 focus:border-[hsl(var(--blue))] outline-none"
-                  placeholder="LPT Corp"
+                  placeholder="Nom de votre organisation"
                   value={form.companyName}
                   onChange={(e) => setForm((p) => ({ ...p, companyName: e.target.value }))}
                   required
                 />
               </label>
-              <label className="block sm:col-span-1">
-                <span className="text-sm font-semibold">Nom du contact *</span>
+              <label className="block sm:col-span-2">
+                <span className="text-sm font-semibold">Votre nom *</span>
                 <input
                   className="mt-1 w-full rounded-xl border-2 border-foreground/20 px-4 py-2.5 focus:border-[hsl(var(--blue))] outline-none"
-                  placeholder="Jean Dupont"
+                  placeholder="Prénom Nom"
                   value={form.contactName}
                   onChange={(e) => setForm((p) => ({ ...p, contactName: e.target.value }))}
                   required
-                />
-              </label>
-              <label className="block sm:col-span-1">
-                <span className="text-sm font-semibold">Pays</span>
-                <input
-                  className="mt-1 w-full rounded-xl border-2 border-foreground/20 px-4 py-2.5 focus:border-[hsl(var(--blue))] outline-none"
-                  placeholder="🇫🇷 France"
-                  value={form.country}
-                  onChange={(e) => setForm((p) => ({ ...p, country: e.target.value }))}
                 />
               </label>
               <label className="block sm:col-span-1">
@@ -572,7 +646,7 @@ export default function HomePage() {
                 <input
                   type="email"
                   className="mt-1 w-full rounded-xl border-2 border-foreground/20 px-4 py-2.5 focus:border-[hsl(var(--blue))] outline-none"
-                  placeholder="contact@entreprise.com"
+                  placeholder="vous@entreprise.com"
                   value={form.email}
                   onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
                   required
@@ -581,19 +655,11 @@ export default function HomePage() {
               <label className="block sm:col-span-1">
                 <span className="text-sm font-semibold">Téléphone</span>
                 <input
+                  type="tel"
                   className="mt-1 w-full rounded-xl border-2 border-foreground/20 px-4 py-2.5 focus:border-[hsl(var(--blue))] outline-none"
-                  placeholder="+33 ..."
+                  placeholder="+228 …"
                   value={form.phone}
                   onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
-                />
-              </label>
-              <label className="block sm:col-span-2">
-                <span className="text-sm font-semibold">Site web</span>
-                <input
-                  className="mt-1 w-full rounded-xl border-2 border-foreground/20 px-4 py-2.5 focus:border-[hsl(var(--blue))] outline-none"
-                  placeholder="https://"
-                  value={form.website}
-                  onChange={(e) => setForm((p) => ({ ...p, website: e.target.value }))}
                 />
               </label>
               <label className="block sm:col-span-2">
@@ -619,7 +685,7 @@ export default function HomePage() {
         <div className="container mx-auto py-24 text-center">
           <p className="text-muted-foreground">Bah alors</p>
           <h2 className="text-3xl md:text-5xl mb-10">
-            Tu peux rejoindre la <span className="text-[hsl(var(--pink))]">tech</span> Aventure
+            Tu peux rejoindre la <span className="text-[hsl(var(--blue))]">tech</span> Aventure
           </h2>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 max-w-3xl mx-auto">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -636,20 +702,22 @@ export default function HomePage() {
 
       <footer className="border-t-2 border-foreground bg-background">
         <div className="container mx-auto py-10 text-center">
-          <div className="flex justify-center gap-4 mb-4">
-            {[Github, Twitter, Linkedin, Instagram].map((I, i) => (
+          <div className="flex justify-center flex-wrap gap-4 mb-4">
+            {SOCIAL_LINKS.map(({ href, label, Icon }) => (
               <a
-                key={i}
-                href="#"
-                aria-label="social"
-                className="w-10 h-10 rounded-full border-2 border-foreground grid place-items-center hover:bg-[hsl(var(--yellow))] transition"
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="w-10 h-10 rounded-full border-2 border-foreground grid place-items-center hover:bg-[hsl(var(--yellow))] transition text-foreground"
               >
-                <I className="w-4 h-4" />
+                <Icon className="w-4 h-4" />
               </a>
             ))}
           </div>
           <p className="text-sm text-muted-foreground">
-            Codé avec <span className="text-[hsl(var(--pink))]">♥</span> par <span className="font-bold">@LesProsDeLaTech</span>
+            Codé avec <span className="text-[hsl(var(--blue))]">♥</span> par <span className="font-bold">@LesProsDeLaTech</span>
           </p>
         </div>
       </footer>
