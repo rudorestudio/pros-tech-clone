@@ -7,10 +7,10 @@ import { testimonialsData, type Testimonial } from "@/lib/testimonials-data";
 function getBgColor(name: string) {
   const colors = [
     "bg-[hsl(var(--blue))]",
-    "bg-[hsl(var(--pink))]",
+    "bg-sky-500",
     "bg-[hsl(var(--yellow))]",
     "bg-emerald-500",
-    "bg-red-400",
+    "bg-indigo-500",
     "bg-violet-500",
     "bg-orange-400",
   ];
@@ -91,12 +91,12 @@ export function TestimonialChallengersSection() {
       <div className="container mx-auto py-24 px-4">
         <h2 className="text-center text-3xl md:text-5xl mb-16">
           C&apos;est sûr que tu seras ébloui par <br />
-          ces <span className="text-[hsl(var(--pink))] underline-wavy">témoignages</span>.
+          ces <span className="text-[hsl(var(--blue))] underline-wavy">témoignages</span>.
         </h2>
 
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 max-w-6xl mx-auto items-start justify-center">
           <div className="card-pop p-8 w-full lg:max-w-[616px]">
-            <MessageCircle className="w-8 h-8 text-[hsl(var(--pink))] mb-4" />
+            <MessageCircle className="w-8 h-8 text-[hsl(var(--blue))] mb-4" />
             {selected ? (
               <>
                 <p className="text-lg leading-relaxed whitespace-pre-line text-foreground">{selected.text}</p>
