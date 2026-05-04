@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState, type ComponentType, type FormEvent, type SVGProps } from "react";
 import {
   ArrowDown,
@@ -15,8 +16,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { ChallengerAvatar } from "@/components/ChallengerAvatar";
-import { LptNavbarLogo } from "@/components/LptNavbarLogo";
 import { TestimonialChallengersSection } from "@/components/TestimonialChallengersSection";
+
+const navLogoSrc = "/les-pros-de-la-tech.jpg";
 
 // Mêmes fichiers que l’ancien Vite (src/assets/*.png) — servis depuis public/landing
 const lostImg = "/landing/lost.png";
@@ -292,7 +294,15 @@ export default function HomePage() {
             className="flex items-center shrink-0"
             aria-label="Les Pros de la Tech — Accueil"
           >
-            <LptNavbarLogo />
+            <Image
+              src={navLogoSrc}
+              alt="Les Pros de la Tech"
+              width={280}
+              height={76}
+              className="h-[40px] sm:h-[50px] w-auto max-w-[min(280px,72vw)] object-contain object-left"
+              priority
+              sizes="(max-width: 768px) 72vw, 280px"
+            />
           </a>
           <ul className="hidden md:flex items-center gap-8 font-medium">
             <li>
