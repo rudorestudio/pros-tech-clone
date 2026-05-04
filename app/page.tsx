@@ -42,6 +42,7 @@ type SpotlightData = {
   proOfWeekKikos: number;
   monthLabel: string;
   weekLabel: string;
+  weekCaption?: string | null;
 };
 
 type PartnerFormValues = {
@@ -277,7 +278,7 @@ export default function HomePage() {
         name: spotlight?.proOfWeek?.name ?? "—",
         role: spotlight?.proOfWeek ? `Niveau ${spotlight.proOfWeek.lptLevel}` : "En attente des données",
         pts: spotlight?.proOfWeekKikos ?? 0,
-        label: spotlight?.weekLabel ?? "",
+        label: [spotlight?.weekLabel, spotlight?.weekCaption].filter(Boolean).join("\n"),
         avatarUrl: spotlight?.proOfWeek?.avatarUrl ?? null,
         avatarInitials: spotlight?.proOfWeek?.avatarInitials ?? null,
       },
@@ -548,7 +549,9 @@ export default function HomePage() {
                 </div>
                 <div className="font-extrabold text-lg">{p.name}</div>
                 <div className="text-sm text-muted-foreground">{p.role}</div>
-                {p.label ? <div className="text-xs text-muted-foreground mt-1">{p.label}</div> : null}
+                {p.label ? (
+                  <div className="text-xs text-muted-foreground mt-1 whitespace-pre-line">{p.label}</div>
+                ) : null}
                 <div className="mt-4 inline-flex items-center gap-1 text-[hsl(var(--blue))] font-bold">
                   <Star className="w-4 h-4 fill-current" /> {p.pts} pts
                 </div>
